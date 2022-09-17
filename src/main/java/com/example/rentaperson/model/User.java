@@ -47,7 +47,7 @@ public class User implements UserDetails {
 
     private Double pricePerHour = Double.valueOf(0);//provider
 
-    @Pattern(regexp = "(Tutoring|Gaming|Travelling|Shopping|Cooking|Art|Hosting|Baby Sitter)",message = "category must be right ")
+    @Pattern(regexp = "(Tutoring|Gaming|Travelling|Shopping|Cooking|Art|Party Hosting|Baby Sitter)",message = "category must be right ")
     private String category;//provider
 
     @URL(message = "image must be a URL")
