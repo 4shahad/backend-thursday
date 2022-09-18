@@ -78,6 +78,11 @@ public class UserService {
 
     }
 
+    public String getUsernameByID(Integer id){
+        User user=userRepository.findUsersById(id);
+        return user.getUsername();
+    }
+
     public void deleteUser(User user) {
         User myUser=userRepository.getById(user.getId());
         userRepository.delete(myUser);

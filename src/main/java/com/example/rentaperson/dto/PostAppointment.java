@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class PostAppointment {
+    private Integer id;
    private String username;
    private String location;
     private Integer hours;

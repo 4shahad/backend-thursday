@@ -99,5 +99,11 @@ public class UserController {
         return ResponseEntity.status(200).body(personList);
     }
 
+    @PostMapping("/username/{id}")
+    public ResponseEntity findUsernameById(@PathVariable Integer id){
+        String username= userService.getUsernameByID(id);
+        return ResponseEntity.status(201).body(new ApiResponse(username,201));
+    }
+
 
 }

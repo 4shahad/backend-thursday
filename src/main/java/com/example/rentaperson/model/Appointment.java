@@ -37,6 +37,8 @@ public class Appointment {
 
     private String request;
 
+    private boolean canAddReview;
+
     //date
     //disc?
     //    private String status;
