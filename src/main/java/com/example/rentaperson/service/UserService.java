@@ -1,4 +1,5 @@
 package com.example.rentaperson.service;
+import com.example.rentaperson.dto.PersonAndRate;
 import com.example.rentaperson.dto.PersonAndSkill;
 import com.example.rentaperson.dto.UserBody;
 import com.example.rentaperson.model.Skill;
@@ -16,9 +17,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final SkillService skillService;
 
-    public UserService(UserRepository userRepository,@Lazy SkillService skillService) {
+    private final ReviewService reviewService;
+
+
+    public UserService(UserRepository userRepository,@Lazy SkillService skillService,ReviewService reviewService) {
         this.userRepository = userRepository;
         this.skillService = skillService;
+        this.reviewService=reviewService;
     }
 
     public List<User> getAllUser() {
@@ -54,13 +59,21 @@ public class UserService {
 
     public void updateUser(User user,Integer id){
         User newUser = userRepository.getById(id);
+                if(user.getUsername()!=null)
                 newUser.setUsername(user.getUsername());
+                if(user.getEmail()!=null)
                 newUser.setEmail(user.getEmail());
+                if(user.getPassword()!=null){
                String hashedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
-                newUser.setPassword(hashedPassword);
+                newUser.setPassword(hashedPassword);}
+                if(user.getCity()!=null)
                 newUser.setCity(user.getCity());
+                if(user.getPricePerHour()!=null)
                 newUser.setPricePerHour(user.getPricePerHour());
-                newUser.setDescription(user.getDescription());
+                 if(user.getDescription()!=null)
+                 newUser.setDescription(user.getDescription());
+                   if(user.getCategory()!=null)
+                newUser.setCategory(user.getCategory());
                 userRepository.save(newUser);
 
     }
@@ -101,6 +114,20 @@ public class UserService {
         return personAndSkills;
 
     }
+
+    public List<PersonAndRate> findUsersByCategoryWithRate(String cat){
+        List<PersonAndSkill> personAndSkills=findUsersByCategory(cat);
+        List<PersonAndRate> personAndRates=new ArrayList<>();
+        for (int i = 0; i <personAndSkills.size() ; i++) {
+            personAndRates.add(new PersonAndRate(personAndSkills.get(i),reviewService.average(personAndSkills.get(i).getUserBody().getUsername())));
+
+
+        }
+        return personAndRates;
+
+    }
+
+
 
     public UserBody format(User user) {
         return new UserBody( user.getUsername(), user.getEmail(),

@@ -2,9 +2,11 @@ package com.example.rentaperson.controller;
 
 
 import com.example.rentaperson.dto.ApiResponse;
+import com.example.rentaperson.dto.PersonAndRate;
 import com.example.rentaperson.dto.PersonAndSkill;
 import com.example.rentaperson.dto.UserBody;
 import com.example.rentaperson.model.User;
+import com.example.rentaperson.service.ReviewService;
 import com.example.rentaperson.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class UserController {
 
     private final UserService userService;
 
+
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> addUser(@RequestBody @Valid User user){
         userService.register(user);
@@ -34,7 +37,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity getUser(@AuthenticationPrincipal User user){
-        //user.setPassword("");
+        user.setPassword("");
         return ResponseEntity.status(200).body(user);
     }
 
@@ -80,6 +83,16 @@ public class UserController {
     @GetMapping("viewByCategory/{cat}")
     public ResponseEntity findUsersByCategory(@PathVariable String cat) {
         List<PersonAndSkill> personList = userService.findUsersByCategory(cat);
+        if (personList.isEmpty()) {
+            return ResponseEntity.status(400).body(new ApiResponse("No persons from this category", 400));
+        }
+        return ResponseEntity.status(200).body(personList);
+    }
+
+    @GetMapping("viewByCategoryWithRate/{cat}")
+    public ResponseEntity findUsersByCategoryWithRate(@PathVariable String cat) {
+        List<PersonAndRate> personList = userService.findUsersByCategoryWithRate(cat);
+
         if (personList.isEmpty()) {
             return ResponseEntity.status(400).body(new ApiResponse("No persons from this category", 400));
         }

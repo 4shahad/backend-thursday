@@ -81,6 +81,19 @@ public class ReviewService {
         return "average rate of "+username+": "+ave;
     }
 
+    public Integer average(String username){
+        List<Rate> rates=getPersonReviews(username);
+        Integer count=rates.size();
+        if(count==0)
+            return 0;
+        Double ave= Double.valueOf(0);
+        for (int i = 0; i <rates.size() ; i++) {
+            ave=ave+rates.get(i).getRate();
+        }
+        ave=ave/count;
+        return (int) Math.round(ave);
+    }
+
     public List<Rate> formatList(List<Review> reviews) {
         List<Rate> rate =new ArrayList<>();
         for (Review review : reviews) {
