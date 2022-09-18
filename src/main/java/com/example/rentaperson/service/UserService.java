@@ -150,4 +150,9 @@ public class UserService {
         return userBody;
     }
 
+    public User findPersonByUsername(String username) {
+        User person= userRepository.findUsersByUsername(username);
+        person.setPassword("");
+        return person;
+    }
 }

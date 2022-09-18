@@ -62,7 +62,7 @@ public class AppointmentController {
         return ResponseEntity.status(201).body(new ApiResponse("appointment completed !",201));
     }
 
-    @PutMapping("/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity updateApp(@PathVariable Integer id,@AuthenticationPrincipal User user,@RequestBody Appointment appointment){
         appointmentService.updateApp(user,appointment,id);
         return ResponseEntity.status(200).body("Appointment updated");

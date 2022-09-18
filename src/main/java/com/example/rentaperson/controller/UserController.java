@@ -105,5 +105,11 @@ public class UserController {
         return ResponseEntity.status(201).body(new ApiResponse(username,201));
     }
 
+    @GetMapping("/personByUsername/{username}")
+    public ResponseEntity findUsernameById(@PathVariable String username){
+        User user= userService.findPersonByUsername(username);
+        return ResponseEntity.status(200).body(user);
+    }
+
 
 }

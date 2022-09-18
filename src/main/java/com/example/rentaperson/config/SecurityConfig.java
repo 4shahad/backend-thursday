@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers("/api/v1/user/register","/api/v1/user/viewAllPersons","/api/v1/user/viewByCategory/{cat}","/api/v1/user/viewByCity/{city}","/api/v1/review/reviewByPerson/{username}","/api/v1/review/aveOfPerson/{username}","/api/v1/user/viewByCategoryWithRate/{cat}","/api/v1/user/username/{id}").permitAll()
+                .antMatchers("/api/v1/user/register","/api/v1/user/viewAllPersons","/api/v1/user/viewByCategory/{cat}","/api/v1/user/viewByCity/{city}","/api/v1/review/reviewByPerson/{username}","/api/v1/review/aveOfPerson/{username}","/api/v1/user/viewByCategoryWithRate/{cat}","/api/v1/user/username/{id}","/api/v1/user/personByUsername/{username}").permitAll()
 
 
 
