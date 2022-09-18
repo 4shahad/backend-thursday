@@ -107,8 +107,8 @@ public class UserController {
 
     @GetMapping("/personByUsername/{username}")
     public ResponseEntity findUsernameById(@PathVariable String username){
-        User user= userService.findPersonByUsername(username);
-        return ResponseEntity.status(200).body(user);
+        PersonAndSkill person= userService.findPersonByUsername(username);
+        return ResponseEntity.status(200).body(person);
     }
 
 

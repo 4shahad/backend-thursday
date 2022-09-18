@@ -150,9 +150,10 @@ public class UserService {
         return userBody;
     }
 
-    public User findPersonByUsername(String username) {
+    public PersonAndSkill findPersonByUsername(String username) {
         User person= userRepository.findUsersByUsername(username);
         person.setPassword("");
-        return person;
+        PersonAndSkill personAndSkills=new PersonAndSkill(person,skillService.getPersonSkills(username));
+        return personAndSkills;
     }
 }
