@@ -61,7 +61,7 @@ public class AppointmentService {
             newA.setDate(appointment.getDate());
         if(appointment.getRequest()!=null)
             newA.setRequest(appointment.getRequest());
-        appointmentRepository.save(appointment);
+        appointmentRepository.save(newA);
     }
 
     public void updateAppReview(Integer id) {

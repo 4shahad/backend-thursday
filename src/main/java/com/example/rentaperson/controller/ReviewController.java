@@ -34,6 +34,7 @@ public class ReviewController {
         if(reviewService.postReview(user,appId,review)==1){
         return ResponseEntity.status(400).body(new ApiResponse("Try the service before you judge !",400));}
         else{
+
             return ResponseEntity.status(201).body(new ApiResponse("Review added!",201));}
 
 
