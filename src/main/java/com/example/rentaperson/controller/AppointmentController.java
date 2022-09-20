@@ -62,10 +62,16 @@ public class AppointmentController {
         return ResponseEntity.status(201).body(new ApiResponse("appointment completed !",201));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity updateApp(@AuthenticationPrincipal User user,@RequestBody Appointment appointment){
-        appointmentService.updateApp(user,appointment);
-        return ResponseEntity.status(200).body("Appointment updated");
+    @PostMapping("/update/{id}")
+    public ResponseEntity updateApp(@PathVariable Integer id,@AuthenticationPrincipal User user,@RequestBody Appointment appointment){
+        appointmentService.updateApp(user,appointment,id);
+        return ResponseEntity.status(201).body(new ApiResponse("Appointment updated",201));
+    }
+
+    @PostMapping("/cancelNew/{id}")
+    public ResponseEntity<ApiResponse> cancelNewAppointment(@PathVariable Integer id, @AuthenticationPrincipal User user){
+        appointmentService.makeItCanceled(user,id);
+        return ResponseEntity.status(201).body(new ApiResponse("appointment canceled !",201));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -80,4 +86,13 @@ public class AppointmentController {
 
         return ResponseEntity.status(200).body(appointments);
     }
+
+    @GetMapping("/getApp/{id}")
+    public ResponseEntity<Appointment> getAppById(@PathVariable Integer id,@AuthenticationPrincipal User user){
+        Appointment appointment=appointmentService.getAppById(id,user);
+
+        return ResponseEntity.status(200).body(appointment);
+    }
+
+
 }

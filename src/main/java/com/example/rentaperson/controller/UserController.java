@@ -99,5 +99,17 @@ public class UserController {
         return ResponseEntity.status(200).body(personList);
     }
 
+    @PostMapping("/username/{id}")
+    public ResponseEntity findUsernameById(@PathVariable Integer id){
+        String username= userService.getUsernameByID(id);
+        return ResponseEntity.status(201).body(new ApiResponse(username,201));
+    }
+
+    @GetMapping("/personByUsername/{username}")
+    public ResponseEntity findUsernameById(@PathVariable String username){
+        PersonAndSkill person= userService.findPersonByUsername(username);
+        return ResponseEntity.status(200).body(person);
+    }
+
 
 }

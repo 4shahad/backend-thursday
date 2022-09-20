@@ -23,6 +23,8 @@ public class ReviewService {
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
 
+    private final AppointmentService appointmentService;
+
     public List<Review> getAllReview(){return reviewRepository.findAll();}
 
     public List<Review> findReviewByUserId(Integer id){return reviewRepository.findReviewByUserId(id);}
@@ -31,18 +33,27 @@ public class ReviewService {
 
     public List<Review> findReviewByRate(Integer rate){return reviewRepository.findReviewByRate(rate);}
 
-    public boolean postReview(User user, String username, Review review){
-        User person=userRepository.findUsersByUsername(username);
-        if(person==null)
-            return false;
-        Appointment appointment=appointmentRepository.
-                findAppointmentByUserIdAndPersonIdAndStatus(user.getId(),person.getId(),"completed");
+    public Integer postReview(User user, Integer appId, Review review){
+
+        Appointment appointment=appointmentRepository.findAppointmentByIdAndStatus(appId,"completed");
+        System.out.println(appointment);
+//                findAppointmentByUserIdAndPersonIdAndStatus(user.getId(),person.getId(),"completed");
         if(appointment==null)
-            return false;
-        review.setUserId(user.getId());
-        review.setPersonId(person.getId());
-        reviewRepository.save(review);
-        return true;
+            return  1;//"There is no appointment with this id"
+        User person=userRepository.findUsersById(appointment.getPersonId());
+
+         if(appointment.isCanAddReview()){
+             review.setUserId(user.getId());
+             review.setPersonId(person.getId());
+             reviewRepository.save(review);
+             appointmentService.updateAppReview(appId);
+             System.out.println("I am inside 3");
+            return 3; //true
+        }
+         else
+
+            return 2;//"There is already a review for this appointment"
+
     }
 
     public boolean updateReview(User user,Review review) {

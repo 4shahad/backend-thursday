@@ -25,7 +25,7 @@ public class AppointmentService {
 
     public void post(PostAppointment ap, Integer id){
         User person=userRepository.findUsersByUsername(ap.getUsername());
-        Appointment appointment1=new Appointment(null,id,person.getId(),ap.getLocation(),ap.getHours(),person.getPricePerHour()*ap.getHours(),"new",ap.getDate(),ap.getRequest());
+        Appointment appointment1=new Appointment(null,id,person.getId(),ap.getLocation(),ap.getHours(),person.getPricePerHour()*ap.getHours(),"new",ap.getDate(),ap.getRequest(),true);
         appointmentRepository.save(appointment1);
     }
 
@@ -34,7 +34,7 @@ public class AppointmentService {
             return appointmentRepository.findAppointmentByPersonId((user.getId()));
         }
         else{
-            return formatList(appointmentRepository.findAppointmentByUserId((user.getId())));
+            return appointmentRepository.findAppointmentByUserId((user.getId()));
         }
     }
     public void makeItConfirmed(User person,Integer id){
@@ -51,11 +51,23 @@ public class AppointmentService {
 
 
 
-    public void updateApp(User user,Appointment appointment) {
-        Appointment newA=appointmentRepository.findAppointmentByIdAndUserId(appointment.getId(),user.getId());
-        newA.setLocation(appointment.getLocation());
-        newA.setStatus(appointment.getStatus());
-        appointmentRepository.save(appointment);
+    public void updateApp(User user,Appointment appointment,Integer id) {
+        Appointment newA=appointmentRepository.findAppointmentByIdAndUserId(id,user.getId());
+        if(appointment.getLocation()!=null)
+            newA.setLocation(appointment.getLocation());
+        if(appointment.getHours()!=null)
+            newA.setHours(appointment.getHours());
+        if(appointment.getDate()!=null)
+            newA.setDate(appointment.getDate());
+        if(appointment.getRequest()!=null)
+            newA.setRequest(appointment.getRequest());
+        appointmentRepository.save(newA);
+    }
+
+    public void updateAppReview(Integer id) {
+        Appointment newA=appointmentRepository.findAppointmentById(id);
+        newA.setCanAddReview(false);
+        appointmentRepository.save(newA);
     }
 
     public void deleteApp(User user,Integer id) {
@@ -68,7 +80,7 @@ public class AppointmentService {
             return appointmentRepository.findAppointmentByPersonIdAndStatus(user.getId(),"confirmed");
         }
         else{
-            return formatList(appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(),"confirmed"));
+            return appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(),"confirmed");
         }
     }
 
@@ -77,25 +89,33 @@ public class AppointmentService {
             return appointmentRepository.findAppointmentByPersonIdAndStatus(user.getId(),"new");
         }
         else{
-            return formatList(appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(),"new"));
+            return appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(),"new");
         }
     }
 
-    public List viewCompleted(User user){
-        if(user.getRole().equals("PERSON")){
-            return appointmentRepository.findAppointmentByPersonIdAndStatus(user.getId(),"completed");
-        }
-        else{
-            return formatList(appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(),"completed"));
+    public List viewCompleted(User user) {
+        if (user.getRole().equals("PERSON")) {
+            return appointmentRepository.findAppointmentByPersonIdAndStatus(user.getId(), "completed");
+        } else {
+            return appointmentRepository.findAppointmentByUserIdAndStatus(user.getId(), "completed");
         }
     }
+
+        public void makeItCanceled(User person, Integer id) {
+            Appointment appointment= appointmentRepository.
+                    findAppointmentByPersonIdAndIdAndStatus(person.getId(),id,"new");
+            User user=userRepository.getById(appointment.getUserId());
+            appointment.setStatus("canceled");
+            appointmentRepository.save(appointment);
+        }
+
 
     public List<PostAppointment> formatList(List<Appointment> app) {
         List<PostAppointment> appBody =new ArrayList<>();
         User user;
         for (Appointment value : app) {
             user=userRepository.getById(value.getPersonId());
-                appBody.add(new PostAppointment(user.getUsername(), value.getLocation(),value.getHours(), value.getTotal(),value.getStatus(),value.getDate(),value.getRequest()));
+                appBody.add(new PostAppointment(value.getId(),user.getUsername(), value.getLocation(),value.getHours(), value.getTotal(),value.getStatus(),value.getDate(),value.getRequest()));
         }
         return appBody;
     }
@@ -106,6 +126,10 @@ public class AppointmentService {
         User user=userRepository.getById(appointment.getUserId());
         appointment.setStatus("completed");
         appointmentRepository.save(appointment);
+    }
+
+    public Appointment getAppById(Integer id,User user) {
+        return appointmentRepository.findAppointmentByIdAndUserId(id,user.getId());
     }
 }
 

@@ -28,12 +28,15 @@ public class ReviewController {
         return ResponseEntity.status(200).body(reviews);
     }
 
-    @PostMapping("/addReview/{username}")
-    public ResponseEntity<ApiResponse> addReview(@PathVariable String username,@RequestBody @Valid Review review,@AuthenticationPrincipal User user){
-        if(reviewService.postReview(user,username,review))
-        return ResponseEntity.status(201).body(new ApiResponse("review added !",201));
-        else
-            return ResponseEntity.status(400).body(new ApiResponse("Try the service before you judge !",400));
+    @PostMapping("/addReview/{appId}")
+    public ResponseEntity<ApiResponse> addReview(@PathVariable Integer appId,@RequestBody @Valid Review review,@AuthenticationPrincipal User user){
+        System.out.println("what:"+reviewService.postReview(user,appId,review));
+        if(reviewService.postReview(user,appId,review)==1){
+        return ResponseEntity.status(400).body(new ApiResponse("Try the service before you judge !",400));}
+        else{
+
+            return ResponseEntity.status(201).body(new ApiResponse("Review added!",201));}
+
 
     }
 
